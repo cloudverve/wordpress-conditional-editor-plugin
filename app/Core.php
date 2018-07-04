@@ -22,9 +22,23 @@ class Core {
     // Check dependencies
     register_activation_hook( $this->plugin_identifier, array( $this, 'activate' ) );
 
-    // Load settings page(s)
+    // Load plugin after Carbon Fields is initialized
+    add_action( 'carbon_fields_fields_registered', array( $this, 'load_plugin' ) );
 
-    // Load plugin logic
+  }
+
+  /**
+    * Load the plugin
+    *
+    * @since 0.1.0
+    */
+  public function load_plugin() {
+
+    // Create settings page(s)
+    new Settings();
+
+    // Perform plugin logic
+    new Plugin();
 
   }
 
