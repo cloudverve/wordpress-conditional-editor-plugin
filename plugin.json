@@ -1,0 +1,12 @@
+{
+  "prefix": "ced",
+  "short_name": "Conditional Editor",
+  "object_cache": {
+    "group": "conditional_editor",
+    "expire": 259200
+  },
+  "dependencies": {
+    "php": "7.0",
+    "carbon_fields": "2.2.0"
+  }
+}
