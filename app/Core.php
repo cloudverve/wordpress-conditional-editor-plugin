@@ -5,22 +5,26 @@ namespace CloudVerve\ConditionalEditor;
  * Plugin loader and dependency checker.
  * @since 0.1.0
  */
-class Plugin {
+class Core {
 
   public $plugin_file;
   public $plugin_identifier;
   public $config;
   public $prefix;
 
-  function __construct( $file = null ) {
+  function __construct() {
 
-    $this->plugin_file = $file;
+    $this->plugin_file = trailingslashit( dirname( __DIR__ ) ) . 'conditional-editor.php';
     $this->plugin_identifier = $this->get_plugin_identifier();
     $this->config = $this->get_plugin_config();
     $this->prefix = $this->config->prefix;
 
     // Check dependencies
     register_activation_hook( $this->plugin_identifier, array( $this, 'activate' ) );
+
+    // Load settings page(s)
+
+    // Load plugin logic
 
   }
 

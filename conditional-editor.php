@@ -15,4 +15,4 @@ if( !defined('ABSPATH') ) die();
 
 require( __DIR__ . '/vendor/autoload.php' );
 
-new CloudVerve\ConditionalEditor\Plugin( __FILE__ );
+new CloudVerve\ConditionalEditor\Core();
