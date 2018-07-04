@@ -1,0 +1,22 @@
+{
+  "name": "dmhendricks/wordpress-conditional-editor-plugin",
+  "type": "wordpress-plugin",
+  "description": "Choose between classic and Gutenberg editor based on conditions.",
+  "keywords": [ "wordpress", "plugin", "gutenberg", "classic", "editor", "conditional" ],
+  "homepage": "https://github.com/dmhendricks/wordpress-conditional-editor-plugin/",
+  "license": "GPL-2.0-or-later",
+  "support": {
+    "issues": "https://github.com/dmhendricks/wordpress-conditional-editor-plugin/issues",
+    "source": "https://github.com/dmhendricks/wordpress-conditional-editor-plugin/"
+  },
+  "require": {
+    "php": ">=7.0",
+    "htmlburger/carbon-fields": "^2.2.0",
+    "composer/installers": "^1.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "CloudVerve\\ConditionalEditor\\": "app/"
+    }
+  }
+}
