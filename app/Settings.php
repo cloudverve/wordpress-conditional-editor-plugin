@@ -10,11 +10,11 @@ use Carbon_Fields\Field;
  */
 class Settings extends Plugin {
 
-  function __construct() {
+  public function init() {
 
-    if( is_multisite() ) $this->create_network_settings_page();
+    if( is_multisite() ) self::create_network_settings_page();
 
-    $this->create_site_settings_page();
+    self::create_site_settings_page();
 
   }
 

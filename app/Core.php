@@ -1,5 +1,6 @@
 <?php
 namespace CloudVerve\ConditionalEditor;
+use CloudVerve\ConditionalEditor\Plugin;
 
 /**
  * Perform plugin logic
@@ -7,15 +8,19 @@ namespace CloudVerve\ConditionalEditor;
  */
 class Core extends Plugin {
 
-  function __construct() {
+  public function init() {
 
     /*
-    $my_option = $this->get_cache_object( 'time_test_cache', function() {
+    var_dump( self::$plugin_identifier ); exit;
+    $my_option = self::get_cache_object( 'time_test_cache', function() {
       return time();
     });
+    var_dump( $my_option );
+    var_dump( time() ); exit;
     */
 
   }
+
 
 }
 ?>

@@ -7,20 +7,21 @@ namespace CloudVerve\ConditionalEditor;
  */
 class Plugin {
 
-  public $plugin_file;
-  public $plugin_identifier;
-  public $config;
-  public $prefix = 'ced';
+  public static $plugin_file;
+  public static $plugin_identifier;
+  public static $config;
+  public static $textdomain;
+  //public static $prefix;
 
   function __construct() {
 
-    $this->plugin_file = trailingslashit( dirname( __DIR__ ) ) . 'conditional-editor.php';
-    $this->plugin_identifier = $this->get_plugin_identifier();
-    $this->config = $this->get_plugin_config();
-    $this->prefix = $this->config->prefix;
+    self::$plugin_file = trailingslashit( dirname( __DIR__ ) ) . 'conditional-editor.php';
+    self::$plugin_identifier = $this->get_plugin_identifier();
+    self::$config = $this->get_plugin_config();
+    self::$textdomain = self::$config->slug;
 
     // Check dependencies
-    register_activation_hook( $this->plugin_identifier, array( $this, 'activate' ) );
+    register_activation_hook( self::$plugin_identifier, array( $this, 'activate' ) );
 
     // Load plugin after Carbon Fields is initialized
     add_action( 'carbon_fields_fields_registered', array( $this, 'load_plugin' ) );
@@ -35,10 +36,10 @@ class Plugin {
   public function load_plugin() {
 
     // Create settings page(s)
-    new Settings();
+    Settings::init();
 
     // Perform plugin logic
-    new Core();
+    Core::init();
 
   }
 
@@ -53,18 +54,18 @@ class Plugin {
 
     // Check PHP version
     if( version_compare( phpversion(), $this->config->dependencies->php, '<' ) ) {
-      $notices[] = __( 'This plugin is not supported on versions of PHP below', 'conditional-editor' ) . ' ' . $this->config->dependencies->php . '.' ;
+      $notices[] = __( 'This plugin is not supported on versions of PHP below', self::$textdomain ) . ' ' . $this->config->dependencies->php . '.' ;
     }
 
     // Check Carbon Fields version
     $cf_version = defined('\\Carbon_Fields\\VERSION') ? current( explode( '-', \Carbon_Fields\VERSION ) ) : null;
     if ( $cf_version && version_compare( $cf_version, $version, '<' ) ) {
-      $notices[] = __( 'An outdated version of Carbon Fields has been detected:', 'conditional-editor' ) . ' ' . $cf_version . ' (&gt;= ' . self::$config->get( $this->config->dependencies->php ) . ' ' . __( 'required', 'conditional-editor' ) . ').' . ' <strong>' . $this->get_plugin_meta( 'Name' ) . '</strong> ' . __( 'deactivated.', 'conditional-editor' ) ;
+      $notices[] = __( 'An outdated version of Carbon Fields has been detected:', self::$textdomain ) . ' ' . $cf_version . ' (&gt;= ' . self::$config->get( $this->config->dependencies->php ) . ' ' . __( 'required', self::$textdomain ) . ').' . ' <strong>' . $this->get_plugin_meta( 'Name' ) . '</strong> ' . __( 'deactivated.', self::$textdomain ) ;
     }
 
     if( $notices ) {
 
-      deactivate_plugins( $this->plugin_identifier );
+      deactivate_plugins( self::$plugin_identifier );
 
       $notices = '<ul><li>' . implode( "</li>\n<li>", $notices ) . '</li></ul>';
       die( $notices );
@@ -82,7 +83,7 @@ class Plugin {
     */
   private function get_plugin_identifier() {
 
-    $file = explode( DIRECTORY_SEPARATOR, $this->plugin_file );
+    $file = explode( DIRECTORY_SEPARATOR, self::$plugin_file );
     return implode( DIRECTORY_SEPARATOR, array_slice( $file, -2, 2 ) );
 
   }
@@ -95,7 +96,7 @@ class Plugin {
     */
   private function get_plugin_config() {
 
-    $config_file = trailingslashit( dirname( $this->plugin_file ) ) . 'plugin.json';
+    $config_file = trailingslashit( dirname( self::$plugin_file ) ) . 'plugin.json';
     return json_decode( file_get_contents( $config_file ) );
 
   }
@@ -109,7 +110,7 @@ class Plugin {
     */
   public function get_plugin_meta( $field = null ) {
 
-    $plugin_data = get_plugin_data( $this->plugin_file );
+    $plugin_data = get_plugin_data( self::$plugin_file );
     return $field ? $plugin_data[$field] : $plugin_data;
 
   }
@@ -126,9 +127,10 @@ class Plugin {
     */
   public function get_cache_object( $key = null, $callback, $network_global = false ) {
 
-    $object_cache_group = $this->config->object_cache->group;
+    $object_cache_group = self::$config->object_cache->group;
+    //var_dump( $object_cache_group );
     if( is_multisite() ) $object_cache_group .= '_' . get_current_site()->id;
-    $object_cache_expire = $this->config->object_cache->expire;
+    $object_cache_expire = self::$config->object_cache->expire;
 
     $result = null;
 
@@ -200,7 +202,7 @@ class Plugin {
     */
   public function prefix( $field, $before = '', $after = '_' ) {
 
-    return $before . $this->prefix . $after . $field;
+    return $before . self::$config->prefix . $after . $field;
 
   }
 

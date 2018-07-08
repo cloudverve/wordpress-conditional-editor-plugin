@@ -1,4 +1,5 @@
 {
+  "slug": "conditional-editor",
   "prefix": "ced",
   "short_name": "Conditional Editor",
   "object_cache": {
