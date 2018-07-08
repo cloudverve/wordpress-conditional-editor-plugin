@@ -162,10 +162,10 @@ class Plugin {
     */
   public function get_carbon_plugin_option( $key ) {
 
-    $key = $this->prefix( $key );
+    $key = self::prefix( $key );
 
     // Attempt to get value from cache, else fetch value from database
-    return $this->get_cache_object( $key, function() use ( &$key ) {
+    return self::get_cache_object( $key, function() use ( &$key ) {
       return carbon_get_theme_option( $key );
     });
 
@@ -183,10 +183,10 @@ class Plugin {
     if( !defined( 'SITE_ID_CURRENT_SITE' ) ) return null;
     $site_id = SITE_ID_CURRENT_SITE;
 
-    $key = $this->prefix( $key );
+    $key = self::prefix( $key );
 
     // Attempt to get value from cache, else fetch value from database
-    return $this->get_cache_object( $key, function() use ( &$site_id, &$key ) {
+    return self::get_cache_object( $key, function() use ( &$site_id, &$key ) {
       return carbon_get_network_option( $site_id, $key );
     }, true );
 
