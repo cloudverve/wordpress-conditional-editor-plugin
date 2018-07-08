@@ -9,6 +9,8 @@
 
 This plugin will allow you to choose between classic and Gutenberg editor based on conditions.
 
+**This plugin crrently does not work!**
+
 ## Requirements
 
 * WordPress 4.5 or higher
