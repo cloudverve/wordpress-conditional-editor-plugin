@@ -10,7 +10,7 @@ class Plugin {
   public $plugin_file;
   public $plugin_identifier;
   public $config;
-  public $prefix;
+  public $prefix = 'ced';
 
   function __construct() {
 
@@ -120,6 +120,7 @@ class Plugin {
     *
     * @param string $key Key value of cache to retrieve
     * @param function $callback Result to return/set if does not exist in cache
+    * @param bool $network_global Set to true if global/network setting, false if site-specific
     * @return string Cached value of key
     * @since 0.1.0
     */
@@ -157,10 +158,14 @@ class Plugin {
     * @return mixed The field value
     * @since 0.1.0
     */
-  public function get_carbon_plugin_option( $field, $network = false ) {
+  public function get_carbon_plugin_option( $key ) {
 
-    // TODO
-    return null;
+    $key = $this->prefix( $key );
+
+    // Attempt to get value from cache, else fetch value from database
+    return $this->get_cache_object( $key, function() use ( &$key ) {
+      return carbon_get_theme_option( $key );
+    });
 
   }
 
@@ -171,9 +176,31 @@ class Plugin {
     * @return mixed The field value
     * @since 0.1.0
     */
-  public function get_carbon_network_option( $field ) {
+  public function get_carbon_network_option( $key ) {
 
-    return $this->get_carbon_plugin_option( $field, true );
+    if( !defined( 'SITE_ID_CURRENT_SITE' ) ) return null;
+    $site_id = SITE_ID_CURRENT_SITE;
+
+    $key = $this->prefix( $key );
+
+    // Attempt to get value from cache, else fetch value from database
+    return $this->get_cache_object( $key, function() use ( &$site_id, &$key ) {
+      return carbon_get_network_option( $site_id, $key );
+    }, true );
+
+  }
+
+  /**
+    * Add plugin prefix to variable
+    *
+    * @param string $field The string to add prefix
+    * @param string $before Character(s) to add before the prefix
+    * @param string $after Character(s) to add after the prefix
+    * @since 0.1.0
+    */
+  public function prefix( $field, $before = '', $after = '_' ) {
+
+    return $before . $this->prefix . $after . $field;
 
   }
 

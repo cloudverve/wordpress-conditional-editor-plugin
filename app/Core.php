@@ -9,12 +9,11 @@ class Core extends Plugin {
 
   function __construct() {
 
+    /*
     $my_option = $this->get_cache_object( 'time_test_cache', function() {
       return time();
     });
-    var_dump( $my_option );
-    var_dump( time() );
-
+    */
 
   }
 
