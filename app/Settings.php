@@ -65,12 +65,15 @@ class Settings extends Plugin {
     $post_types = [];
 
     $fields = [
-      Field::make( 'checkbox', $this->prefix( 'disable_gutenberg' ), __( 'Completely Disable Gutenberg', $this->textdomain ) ),
+      Field::make( 'checkbox', $this->prefix( 'disable_gutenberg' ), __( 'Completely Disable Gutenberg', $this->textdomain ) )
+        ->set_default_value( $network ? false : $this->get_carbon_network_option( 'disable_gutenberg' ) ),
       Field::make( 'checkbox', $this->prefix( 'disable_gutenberg_nag' ), __( 'Disable "Try Gutenberg" Notice/Nag', $this->textdomain ) )
         ->help_text( __( 'Removes the "Try Gutenberg" panel from the WP Admin Dashboard.', $this->textdomain ) )
-        ->set_default_value( true ),
+        ->set_default_value( $network ?: $this->get_carbon_network_option( 'disable_gutenberg_nag' ) ),
       Field::make( 'set', $this->prefix( 'disabled_roles' ), __( 'Disable for User Roles', $this->textdomain ) )
+        ->set_datastore( new Serialized_Theme_Options_Datastore() )
         ->help_text( $network ? __( 'Super Admins always have access to modify sub-site settings.', $this->textdomain ) : null )
+        ->set_default_value( $network ? null : $this->get_carbon_network_option( 'disabled_roles' ) )
         ->add_options( $this->get_user_roles( $network ) )
     ];
 
@@ -78,12 +81,15 @@ class Settings extends Plugin {
 
       // Disable for Post Types
       $fields[] = Field::make( 'set', $this->prefix( 'disabled_post_types' ), __( 'Disabled Post Types', $this->textdomain ) )
+        ->set_datastore( new Serialized_Theme_Options_Datastore() )
         ->add_options( $this->get_post_types() );
 
       // Disable Template Files
       $page_templates = wp_get_theme()->get_page_templates();
       if( $page_templates ) {
         $fields[] = Field::make( 'set', $this->prefix( 'disabled_template_files' ), __( 'Disabled Template Files', $this->textdomain ) )
+          ->set_datastore( new Serialized_Theme_Options_Datastore() )
+          ->help_text( sprintf( __( '<a href="%s">Page Templates</a> are usually defined by your theme and sometimes plugins.', $this->textdomain ), 'https://developer.wordpress.org/themes/basics/template-files/' ) )
           ->add_options( $page_templates );
       }
 
