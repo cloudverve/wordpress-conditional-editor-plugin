@@ -7,21 +7,20 @@ namespace CloudVerve\ConditionalEditor;
  */
 class Plugin {
 
-  public static $plugin_file;
-  public static $plugin_identifier;
-  public static $config;
+  public $plugin_file;
+  public $plugin_identifier;
+  public $config;
   public static $textdomain;
-  //public static $prefix;
 
   function __construct() {
 
-    self::$plugin_file = trailingslashit( dirname( __DIR__ ) ) . 'conditional-editor.php';
-    self::$plugin_identifier = $this->get_plugin_identifier();
-    self::$config = $this->get_plugin_config();
-    self::$textdomain = self::$config->slug;
+    $this->plugin_file = trailingslashit( dirname( __DIR__ ) ) . 'conditional-editor.php';
+    $this->plugin_identifier = $this->get_plugin_identifier();
+    $this->config = $this->get_plugin_config();
+    self::$textdomain = $this->config->slug;
 
     // Check dependencies
-    register_activation_hook( self::$plugin_identifier, array( $this, 'activate' ) );
+    register_activation_hook( $this->plugin_identifier, array( $this, 'activate' ) );
 
     // Load plugin after Carbon Fields is initialized
     add_action( 'carbon_fields_fields_registered', array( $this, 'load_plugin' ) );
@@ -36,10 +35,12 @@ class Plugin {
   public function load_plugin() {
 
     // Create settings page(s)
-    Settings::init();
+    $settings = new Settings();
+    $settings->init();
 
     // Perform plugin logic
-    Core::init();
+    $core = new Core();
+    $core->init();
 
   }
 
@@ -60,12 +61,12 @@ class Plugin {
     // Check Carbon Fields version
     $cf_version = defined('\\Carbon_Fields\\VERSION') ? current( explode( '-', \Carbon_Fields\VERSION ) ) : null;
     if ( $cf_version && version_compare( $cf_version, $version, '<' ) ) {
-      $notices[] = __( 'An outdated version of Carbon Fields has been detected:', self::$textdomain ) . ' ' . $cf_version . ' (&gt;= ' . self::$config->get( $this->config->dependencies->php ) . ' ' . __( 'required', self::$textdomain ) . ').' . ' <strong>' . $this->get_plugin_meta( 'Name' ) . '</strong> ' . __( 'deactivated.', self::$textdomain ) ;
+      $notices[] = __( 'An outdated version of Carbon Fields has been detected:', self::$textdomain ) . ' ' . $cf_version . ' (&gt;= ' . $this->config->get( $this->config->dependencies->php ) . ' ' . __( 'required', self::$textdomain ) . ').' . ' <strong>' . $this->get_plugin_meta( 'Name' ) . '</strong> ' . __( 'deactivated.', self::$textdomain ) ;
     }
 
     if( $notices ) {
 
-      deactivate_plugins( self::$plugin_identifier );
+      deactivate_plugins( $this->plugin_identifier );
 
       $notices = '<ul><li>' . implode( "</li>\n<li>", $notices ) . '</li></ul>';
       die( $notices );
@@ -83,7 +84,7 @@ class Plugin {
     */
   private function get_plugin_identifier() {
 
-    $file = explode( DIRECTORY_SEPARATOR, self::$plugin_file );
+    $file = explode( DIRECTORY_SEPARATOR, $this->plugin_file );
     return implode( DIRECTORY_SEPARATOR, array_slice( $file, -2, 2 ) );
 
   }
@@ -96,7 +97,11 @@ class Plugin {
     */
   private function get_plugin_config() {
 
-    $config_file = trailingslashit( dirname( self::$plugin_file ) ) . 'plugin.json';
+    $plugin_file = $this->plugin_file;
+    $config_file = self::get_cache_object( $this->prefix( 'plugin_config_file' ), function() use ( &$plugin_file ) {
+      return trailingslashit( dirname( $plugin_file ) ) . 'plugin.json';
+    });
+
     return json_decode( file_get_contents( $config_file ) );
 
   }
@@ -110,7 +115,7 @@ class Plugin {
     */
   public function get_plugin_meta( $field = null ) {
 
-    $plugin_data = get_plugin_data( self::$plugin_file );
+    $plugin_data = get_plugin_data( $this->plugin_file );
     return $field ? $plugin_data[$field] : $plugin_data;
 
   }
@@ -127,10 +132,10 @@ class Plugin {
     */
   public function get_cache_object( $key = null, $callback, $network_global = false ) {
 
-    $object_cache_group = self::$config->object_cache->group;
+    $object_cache_group = $this->config->object_cache->group;
     //var_dump( $object_cache_group );
     if( is_multisite() ) $object_cache_group .= '_' . get_current_site()->id;
-    $object_cache_expire = self::$config->object_cache->expire;
+    $object_cache_expire = $this->config->object_cache->expire;
 
     $result = null;
 
@@ -162,10 +167,10 @@ class Plugin {
     */
   public function get_carbon_plugin_option( $key ) {
 
-    $key = self::prefix( $key );
+    $key = $this->prefix( $key );
 
     // Attempt to get value from cache, else fetch value from database
-    return self::get_cache_object( $key, function() use ( &$key ) {
+    return $this->get_cache_object( $key, function() use ( &$key ) {
       return carbon_get_theme_option( $key );
     });
 
@@ -183,10 +188,10 @@ class Plugin {
     if( !defined( 'SITE_ID_CURRENT_SITE' ) ) return null;
     $site_id = SITE_ID_CURRENT_SITE;
 
-    $key = self::prefix( $key );
+    $key = $this->prefix( $key );
 
     // Attempt to get value from cache, else fetch value from database
-    return self::get_cache_object( $key, function() use ( &$site_id, &$key ) {
+    return $this->get_cache_object( $key, function() use ( &$site_id, &$key ) {
       return carbon_get_network_option( $site_id, $key );
     }, true );
 
@@ -202,7 +207,7 @@ class Plugin {
     */
   public function prefix( $field, $before = '', $after = '_' ) {
 
-    return $before . self::$config->prefix . $after . $field;
+    return $before . $this->config->prefix . $after . $field;
 
   }
 
@@ -218,4 +223,3 @@ class Plugin {
   }
 
 }
-?>
