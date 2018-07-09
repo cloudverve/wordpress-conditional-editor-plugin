@@ -26,6 +26,8 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 ## Planned Features
 
 * Multisite / Network Friendly
+	* Set default sub-site settings
+	* Specify parent menu for settings page
 * Disable Gutenberg completely
 * Disable by post type
 * Disable for specific [template files](https://developer.wordpress.org/themes/basics/template-files/)
@@ -34,11 +36,10 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 
 ## TODO
 
-* Fix: Limit flushing cache to plugin group
 * Change: Minor improvements to admin style
 * Add: Ability to set editor by username
-* Add: Ability to move/hide settings page menu item
 * Add: Ability to set editor by post ID
+* Add: Ability to hide settings page menu item
 * **Extensive testing**
 
 ## Change Log

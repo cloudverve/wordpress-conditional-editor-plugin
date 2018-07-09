@@ -36,6 +36,14 @@ class Settings extends Plugin {
         Field::make( 'text', $this->prefix( 'required_capability' ), __( 'Capability Required to Modify Sub-Site Settings', $this->textdomain ) )
           ->help_text( sprintf( __( 'See <a href="%s" target="_blank">Roles &amp; Capabilities</a> for a list of valid capabilities. Set to <tt>manage_network</tt> to disable for site administrators. Default: <tt>manage_options</tt>.', $this->textdomain ), 'https://codex.wordpress.org/Roles_and_Capabilities#Roles' ) )
           ->set_default_value( 'manage_options' ),
+        Field::make( 'select', $this->prefix( 'menu_parent' ), __( 'Parent Menu for Settings Page', $this->textdomain ) )
+          ->add_options([
+            'themes.php' => 'Appearance',
+            'index.php' => 'Dashboard',
+            'options-general.php' => 'Settings',
+            'tools.php' => 'Tools'
+          ])
+          ->set_default_value( 'options-general.php' ),
         Field::make( 'separator', $this->prefix( 'network_settings_defaults' ), __( 'Global Defaults', $this->textdomain ) )
           ->help_text( __( 'The setting below are <strong>defaults</strong> for sub-sites and may be overridden if the user has the capability defined above. Post Types and Template Files are not included here since they vary by theme.', $this->textdomain ) )
       ]);
@@ -52,10 +60,11 @@ class Settings extends Plugin {
   private function create_site_settings_page() {
 
     $required_user_capability = is_multisite() ? (array) trim( $this->get_carbon_network_option( 'required_capability' ) ) : null;
+    $parent_menu = is_multisite() ? $this->get_carbon_network_option( 'menu_parent' ) : 'options-general.php';
 
     $this->container = Container::make( 'theme_options', $this->prefix( 'site_settings' ), __( 'Conditional Editor', $this->textdomain ) )
       ->where( 'current_user_capability', 'IN', $required_user_capability ?: [ 'manage_options' ] )
-      ->set_page_parent( 'options-general.php' );
+      ->set_page_parent( $parent_menu );
 
     $this->container->add_fields( $this->create_common_settings_fields( false ) );
 
@@ -153,7 +162,14 @@ class Settings extends Plugin {
     */
   public function options_saved_flush_cache_group() {
 
-    if( is_network_admin() ) wp_cache_delete( $this->prefix( 'required_capability', '_' ), $this->config->object_cache->group );
+    $object_cache_group = $this->config->object_cache->group;
+    $network_fields = [ 'required_capability', 'menu_parent' ];
+
+    if( is_network_admin() ) {
+      foreach( $network_fields as $field ) {
+        wp_cache_delete( $this->prefix( $field, '_' ), $object_cache_group );
+      }
+    }
 
     foreach( $this->container->get_fields() as $field ) {
       wp_cache_delete( trim( $field->get_name(), '_' ), $this->config->object_cache->group );
