@@ -48,7 +48,7 @@ class Settings extends Plugin {
 
     $required_user_capability = (array) $this->get_carbon_network_option( 'required_capability' );
 
-    $container = Container::make( 'theme_options', $this->prefix( 'settings' ), __( 'Conditional Editor', $this->textdomain ) )
+    $container = Container::make( 'theme_options', $this->prefix( 'site_settings' ), __( 'Conditional Editor', $this->textdomain ) )
       ->where( 'current_user_capability', 'IN', $required_user_capability )
       ->set_page_parent( 'options-general.php' );
 

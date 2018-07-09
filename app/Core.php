@@ -8,7 +8,8 @@ use CloudVerve\ConditionalEditor\Plugin;
  */
 class Core extends Plugin {
 
-  private static $disable_gutenberg;
+  private $disable_gutenberg;
+  private $post_types;
 
   public function init() {
 
@@ -23,6 +24,19 @@ class Core extends Plugin {
       add_filter( 'gutenberg_can_edit_post_type', '__return_false' );
       return;
     }
+
+    // Disable for Post Types
+    $this->post_types = $this->get_carbon_plugin_option( 'disabled_post_types' );
+    if( $this->post_types ) {
+      add_filter('gutenberg_can_edit_post_type', array( $this, 'post_types_classic_editor' ) );
+    }
+
+  }
+
+  public function post_types_classic_editor( $is_enabled, $post_type ) {
+
+    if( in_array( $post_type, $this->post_types ) ) return false;
+    return $is_enabled;
 
   }
 
