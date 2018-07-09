@@ -59,6 +59,8 @@ class Settings extends Plugin {
   /**
     * Create settings fields, common to Network and WP Site Admin
     *
+    * @param bool $network Wether or not function is being called from Network Admin
+    * @return array Returns array of Carbon_Fields\Field
     * @since 0.1.0
     */
   private function create_common_settings_fields( $network = false ) {
@@ -74,9 +76,8 @@ class Settings extends Plugin {
         ->set_default_value( $network ?: $this->get_carbon_network_option( 'disable_gutenberg_nag' ) ),
       Field::make( 'set', $this->prefix( 'disabled_roles' ), __( 'Limit User Roles to Classic Editor', $this->textdomain ) )
         ->set_datastore( new Serialized_Theme_Options_Datastore() )
-        //->help_text( $network ? __( 'Super Admins always have access to modify sub-site settings.', $this->textdomain ) : null )
         ->set_default_value( $network ? null : $this->get_carbon_network_option( 'disabled_roles' ) )
-        ->add_options( $this->get_user_roles( $network ) )
+        ->add_options( $this->get_user_roles() )
     ];
 
     if( !is_network_admin() ) {
@@ -104,6 +105,7 @@ class Settings extends Plugin {
   /**
     * Get defined post types
     *
+    * @return array Array of registered Post Types, formatted for Carbon Fields options
     * @since 0.1.0
     */
   private function get_post_types() {
@@ -122,9 +124,10 @@ class Settings extends Plugin {
   /**
     * Get a list of defined user roles
     *
+    * @return array Array of user roles, formatted for Carbon Fields options
     * @since 0.1.0
     */
-  private function get_user_roles( $network = false ) {
+  private function get_user_roles() {
 
     global $wp_roles;
     $roles = [];
@@ -132,8 +135,6 @@ class Settings extends Plugin {
     foreach( $wp_roles->roles as $key => $role ) {
       $roles[ $key ] = $role['name'];
     }
-
-    //if( ( $roles && !$network ) || !is_multisite() ) unset( $roles['administrator'] );
 
     return $roles;
 
