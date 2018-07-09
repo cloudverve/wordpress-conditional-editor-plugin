@@ -130,9 +130,10 @@ class Settings extends Plugin {
   private function get_user_roles() {
 
     global $wp_roles;
+    $editable_roles = apply_filters( 'editable_roles', $wp_roles->roles );
     $roles = [];
 
-    foreach( $wp_roles->roles as $key => $role ) {
+    foreach( $editable_roles as $key => $role ) {
       $roles[ $key ] = $role['name'];
     }
 

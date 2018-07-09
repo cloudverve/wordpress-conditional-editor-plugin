@@ -25,7 +25,7 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 
 * Multisite / Network Friendly
 * Disable Gutenberg completely
-* Disable by post type - **Not Yet Completed**
+* Disable by post type
 * Disable for specific [template files](https://developer.wordpress.org/themes/basics/template-files/)
 * Disable by user role - **Not Yet Completed**
 * Hide Gutenberg admin notice/nag
