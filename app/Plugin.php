@@ -19,6 +19,9 @@ class Plugin {
     $this->config = $this->get_plugin_config();
     self::$textdomain = $this->config->slug;
 
+    // Load i18n
+    add_action('plugins_loaded', array( $this, 'load_i18n' ) );
+
     // Check dependencies
     register_activation_hook( $this->plugin_identifier, array( $this, 'activate' ) );
 
@@ -117,6 +120,17 @@ class Plugin {
 
     $plugin_data = get_plugin_data( $this->plugin_file );
     return $field ? $plugin_data[$field] : $plugin_data;
+
+  }
+
+  /**
+    * Load translations
+    *
+    * @since 0.1.0
+    */
+  public function load_i18n() {
+
+    load_plugin_textdomain( 'conditional-editor', false, __DIR__ . '/languages' );
 
   }
 
