@@ -46,10 +46,10 @@ class Settings extends Plugin {
     */
   private function create_site_settings_page() {
 
-    $required_user_capability = (array) $this->get_carbon_network_option( 'required_capability' );
+    $required_user_capability = is_multisite() ? (array) trim( $this->get_carbon_network_option( 'required_capability' ) ) : null;
 
     $container = Container::make( 'theme_options', $this->prefix( 'site_settings' ), __( 'Conditional Editor', $this->textdomain ) )
-      ->where( 'current_user_capability', 'IN', $required_user_capability )
+      ->where( 'current_user_capability', 'IN', $required_user_capability ?: 'manage_options' )
       ->set_page_parent( 'options-general.php' );
 
     $container->add_fields( $this->create_common_settings_fields( false ) );

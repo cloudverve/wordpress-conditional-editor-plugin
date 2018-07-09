@@ -35,6 +35,13 @@ class Core extends Plugin {
     $post_types = $this->get_carbon_plugin_option( 'disabled_post_types' );
     if( $post_types && in_array( $post_type, $this->post_types ) ) return false;
 
+    // Disable by User Role
+    $current_user = wp_get_current_user();
+    if( isset( $current_user->roles[0] ) && $current_user->roles[0] ) {
+      $disabled_roles = $this->get_carbon_plugin_option( 'disabled_roles' );
+      if( $disabled_roles && in_array( $current_user->roles[0], $disabled_roles ) ) return false;
+    }
+
     // Disable Gutenberg editor by Template Files
     if( is_admin() && !is_network_admin() && isset( $_GET['post'] ) && intval( $_GET['post'] ) ) {
 
