@@ -25,9 +25,9 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 
 * Multisite / Network Friendly
 * Disable Gutenberg completely
-* Disable by post type
+* Disable by post type - **Not Yet Completed**
 * Disable for specific [template files](https://developer.wordpress.org/themes/basics/template-files/)
-* Disable by user role
+* Disable by user role - **Not Yet Completed**
 * Hide Gutenberg admin notice/nag
 
 ## TODO
@@ -35,6 +35,7 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 * Fix: Limit flushing cache to plugin group
 * Change: Minor improvements to admin style
 * Add: Ability to set editor by username
+* Extensive testing
 
 ## Change Log
 
