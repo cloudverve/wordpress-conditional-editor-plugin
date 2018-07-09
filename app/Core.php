@@ -8,19 +8,16 @@ use CloudVerve\ConditionalEditor\Plugin;
  */
 class Core extends Plugin {
 
+  private static $disable_gutenberg;
+
   public function init() {
 
-    /*
-    var_dump( self::$plugin_identifier ); exit;
-    $my_option = self::get_cache_object( 'time_test_cache', function() {
-      return time();
-    });
-    var_dump( $my_option );
-    var_dump( time() ); exit;
-    */
+    $this->disable_gutenberg = $this->get_carbon_plugin_option( 'disable_gutenberg' );
+
+    // Disable "Try Gutenberg" notice/nag
+    if( $this->disable_gutenberg || $this->get_carbon_plugin_option( 'disable_gutenberg_nag' ) )
+      remove_filter( 'try_gutenberg_panel', 'wp_try_gutenberg_panel' );
 
   }
 
-
 }
-?>

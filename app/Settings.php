@@ -28,10 +28,11 @@ class Settings extends Plugin {
     $container = Container::make( 'network', $this->prefix( 'settings' ), __( 'Conditional Editor', $this->textdomain ) )
       ->set_page_parent( 'settings.php' )
       ->add_fields([
-        Field::make( 'text', $this->prefix( 'required_capability' ), __( 'Capatbility Required to Modify Sub-Site Settings', $this->textdomain ) )
-          ->help_text( sprintf( __( 'See <a href="%s" target="_blank">Roles &amp; Capabilities</a> for a list of valid capabilities. Default: <tt>manage_options</tt>', $this->textdomain ), 'https://codex.wordpress.org/Roles_and_Capabilities#Roles' ) )
+        Field::make( 'text', $this->prefix( 'required_capability' ), __( 'Capability Required to Modify Sub-Site Settings', $this->textdomain ) )
+          ->help_text( sprintf( __( 'See <a href="%s" target="_blank">Roles &amp; Capabilities</a> for a list of valid capabilities. Set to <tt>manage_network</tt> to disable for site administrators. Default: <tt>manage_options</tt>.', $this->textdomain ), 'https://codex.wordpress.org/Roles_and_Capabilities#Roles' ) )
           ->set_default_value( 'manage_options' ),
         Field::make( 'separator', $this->prefix( 'network_settings_defaults' ), __( 'Global Defaults', $this->textdomain ) )
+          ->help_text( __( 'The setting below are <strong>defaults</strong> for sub-sites and may be overridden if the user has the capability defined above. Post Types and Template Files are not included here since they vary by theme.', $this->textdomain ) )
       ]);
 
     $container->add_fields( $this->create_common_settings_fields( true ) );
@@ -66,6 +67,7 @@ class Settings extends Plugin {
 
     $fields = [
       Field::make( 'checkbox', $this->prefix( 'disable_gutenberg' ), __( 'Completely Disable Gutenberg', $this->textdomain ) )
+        ->help_text( __( 'If checked, the options below will be ignored (but saved for future use).', $this->textdomain ) )
         ->set_default_value( $network ? false : $this->get_carbon_network_option( 'disable_gutenberg' ) ),
       Field::make( 'checkbox', $this->prefix( 'disable_gutenberg_nag' ), __( 'Disable "Try Gutenberg" Notice/Nag', $this->textdomain ) )
         ->help_text( __( 'Removes the "Try Gutenberg" panel from the WP Admin Dashboard.', $this->textdomain ) )
