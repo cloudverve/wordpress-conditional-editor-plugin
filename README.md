@@ -9,7 +9,7 @@
 
 This plugin will allow you to choose between classic and Gutenberg editor based on conditions.
 
-:no_entry_sign: **This plugin currently does not work!**
+:no_entry_sign: **This plugin is currently under development and likely contains bugs!**
 
 ## Requirements
 
@@ -27,7 +27,7 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 * Disable Gutenberg completely
 * Disable by post type
 * Disable for specific [template files](https://developer.wordpress.org/themes/basics/template-files/)
-* Disable by user role - **Not Yet Completed**
+* Disable by user role
 * Hide Gutenberg admin notice/nag
 
 ## TODO
@@ -37,7 +37,7 @@ This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher.
 * Add: Ability to set editor by username
 * Add: Ability to move/hide settings page menu item
 * Add: Ability to set editor by post ID
-* Extensive testing
+* **Extensive testing**
 
 ## Change Log
 
