@@ -39,7 +39,8 @@ Install from the WordPress \"Add New\" button or upload the plugin to your site,
 It will activate without Gutenberg but will not do anything.
 
 == Screenshots ==
-1. Network Settings Screen
+1. Plugin Network Admin Settings Screen
+2. Plugin Settings Screen
 
 == Changelog ==
 = Latest =
