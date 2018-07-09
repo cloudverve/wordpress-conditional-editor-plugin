@@ -11,6 +11,8 @@ This plugin will allow you to choose between classic and Gutenberg editor based 
 
 :no_entry_sign: **This plugin is currently under development and likely contains bugs!**
 
+If you'd like to try it before release, you can download an installable ZIP here: [**conditional-editor.zip**](https://f001.backblazeb2.com/file/hendricks/projects/github/cloudverve/wordpress-conditional-editor-plugin/conditional-editor.zip)
+
 ## Requirements
 
 * WordPress 4.5 or higher
