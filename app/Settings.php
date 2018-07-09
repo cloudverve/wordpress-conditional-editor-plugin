@@ -14,7 +14,6 @@ class Settings extends Plugin {
 
     if( is_multisite() ) $this->create_network_settings_page();
 
-    //if( !is_multisite() || $this->get_carbon_network_option( 'allow_override' ) )
     $this->create_site_settings_page();
 
   }
@@ -32,11 +31,7 @@ class Settings extends Plugin {
         Field::make( 'text', $this->prefix( 'required_capability' ), __( 'Capatbility Required to Modify Sub-Site Settings', $this->textdomain ) )
           ->help_text( sprintf( __( 'See <a href="%s" target="_blank">Roles &amp; Capabilities</a> for a list of valid capabilities. Default: <tt>manage_options</tt>', $this->textdomain ), 'https://codex.wordpress.org/Roles_and_Capabilities#Roles' ) )
           ->set_default_value( 'manage_options' ),
-        Field::make( 'separator', $this->prefix( 'network_settings_defaults' ), __( 'Global Defaults', $this->textdomain ) ),
-        /*
-        Field::make( 'checkbox', $this->prefix( 'allow_override' ), __( 'Allow Sub-Sites to Override Network Settings', $this->textdomain ) )
-          ->help_text( __( 'Displays the Conditional Editor menu item in Settings of sub-sites. If unchecked, Network Settings will be used for all sub-sites.', $this->textdomain ) ),
-        */
+        Field::make( 'separator', $this->prefix( 'network_settings_defaults' ), __( 'Global Defaults', $this->textdomain ) )
       ]);
 
     $container->add_fields( $this->create_common_settings_fields( true ) );
@@ -55,12 +50,6 @@ class Settings extends Plugin {
     $container = Container::make( 'theme_options', $this->prefix( 'settings' ), __( 'Conditional Editor', $this->textdomain ) )
       ->where( 'current_user_capability', 'IN', $required_user_capability )
       ->set_page_parent( 'options-general.php' );
-      /*
-      ->add_fields([
-        Field::make( 'checkbox', $this->prefix( 'allow_override' ), __( 'Override Network/Global Settings', $this->textdomain ) )
-          ->help_text( __( 'If checked, settings define on this site/blog will be used instead of default network settings.', $this->textdomain ) ),
-      ]);
-      */
 
     $container->add_fields( $this->create_common_settings_fields( false ) );
 
@@ -75,19 +64,32 @@ class Settings extends Plugin {
 
     $post_types = [];
 
-    return [
+    $fields = [
       Field::make( 'checkbox', $this->prefix( 'disable_gutenberg' ), __( 'Completely Disable Gutenberg', $this->textdomain ) ),
       Field::make( 'checkbox', $this->prefix( 'disable_gutenberg_nag' ), __( 'Disable "Try Gutenberg" Notice/Nag', $this->textdomain ) )
         ->help_text( __( 'Removes the "Try Gutenberg" panel from the WP Admin Dashboard.', $this->textdomain ) )
         ->set_default_value( true ),
       Field::make( 'set', $this->prefix( 'disabled_roles' ), __( 'Disable for User Roles', $this->textdomain ) )
         ->help_text( $network ? __( 'Super Admins always have access to modify sub-site settings.', $this->textdomain ) : null )
-        ->add_options( $this->get_user_roles( $network ) ),
+        ->add_options( $this->get_user_roles( $network ) )
     ];
 
-    // TODO:
-    // 1. Disable for Post Types
-    // 2. Disable for specific Template Files - https://developer.wordpress.org/themes/basics/template-files/
+    if( !is_network_admin() ) {
+
+      // Disable for Post Types
+      $fields[] = Field::make( 'set', $this->prefix( 'disabled_post_types' ), __( 'Disabled Post Types', $this->textdomain ) )
+        ->add_options( $this->get_post_types() );
+
+      // Disable Template Files
+      $page_templates = wp_get_theme()->get_page_templates();
+      if( $page_templates ) {
+        $fields[] = Field::make( 'set', $this->prefix( 'disabled_template_files' ), __( 'Disabled Template Files', $this->textdomain ) )
+          ->add_options( $page_templates );
+      }
+
+    }
+
+    return $fields;
 
   }
 
@@ -98,7 +100,14 @@ class Settings extends Plugin {
     */
   private function get_post_types() {
 
-    // TODO
+    $post_types = [];
+    $types = get_post_types( [ 'public' => true ], 'objects' );
+
+    foreach( $types as $key => $type ) {
+      $post_types[ $key ] = sprintf( '%s (%s)', $type->label, $key );
+    }
+
+    return $post_types;
 
   }
 
