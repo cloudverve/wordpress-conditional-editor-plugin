@@ -2,13 +2,13 @@
 /**
  * @wordpress-plugin
  * Plugin Name:       Conditional Editor
- * Plugin URI:        https://github.com/dmhendricks/wordpress-conditional-editor-plugin/
+ * Plugin URI:        https://github.com/cloudverve/wordpress-conditional-editor-plugin/
  * Description:       Choose between classic and Gutenberg editor based on conditions.
  * Version:           0.1.0
- * Author:            Daniel M. Hendricks
- * Author URI:        https://www.danhendricks.com/
+ * Author:            CloudVerve
+ * Author URI:        https://www.cloudverve.com/
  * License:           GPL-2.0
- * License URI:       https://github.com/dmhendricks/wordpress-conditional-editor-plugin/blob/master/LICENSE
+ * License URI:       https://github.com/cloudverve/wordpress-conditional-editor-plugin/blob/master/LICENSE
  */
 
 if( !defined('ABSPATH') ) die();

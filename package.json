@@ -8,7 +8,7 @@
   },
   "scripts": {
     "translate": "wp-pot -s 'app/**/*.php' -o ./languages/$npm_package_name.pot -p $npm_package_config_slug",
-    "zip": "zip -q -r ../$npm_package_config_slug-$npm_package_version.zip * -x 'node_modules/*' '.git*' './src/*' './.*' './package*.*' './composer.*' './*.md' './*.bak' './bower.json' './gulpfile.js' './README.md' ",
+    "zip": "zip -q -r ../$npm_package_config_slug-$npm_package_version.zip * -x 'node_modules/*' '.git*' './src/*' './.*' './package*.*' './composer.*' './*.md' './*.bak' './bower.json' './gulpfile.js' ",
     "zip-dev": "zip -q -r ../$npm_package_config_slug-$npm_package_version-dev.zip * -x 'node_modules/*' '.git*' '.DS_Store' './*.bak' "
   },
   "devDependencies": {
@@ -16,6 +16,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dmhendricks/wordpress-conditional-editor-plugin.git"
+    "url": "git://github.com/cloudverve/wordpress-conditional-editor-plugin.git"
   }
 }
