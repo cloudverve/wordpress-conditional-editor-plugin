@@ -9,7 +9,7 @@
 
 This plugin will allow you to choose between classic and Gutenberg editor based on conditions.
 
-**This plugin crrently does not work!**
+**This plugin currently does not work!**
 
 ## Requirements
 
@@ -19,7 +19,7 @@ This plugin will allow you to choose between classic and Gutenberg editor based 
 
 ### Carbon Fields
 
-This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher. The WordPress.org repo version comes with it bundled. If you prefer to use the plugin version of Carbon Fields ([download](https://carbonfields.net/zip/latest/)) for easier dependency management, an unbundled version will be made available at the [GitHub repository](https://github.com/dmhendricks/wordpress-conditional-editor-plugin/).
+This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher. The WordPress.org repo version will come with it bundled. If you prefer to use the plugin version of Carbon Fields ([download](https://carbonfields.net/zip/latest/)) or manage dependencies separately, an unbundled version will be made available at the [GitHub repository](https://github.com/dmhendricks/wordpress-conditional-editor-plugin/).
 
 ## Planned Features
 
