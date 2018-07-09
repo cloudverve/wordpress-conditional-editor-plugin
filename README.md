@@ -9,7 +9,7 @@
 
 This plugin will allow you to choose between classic and Gutenberg editor based on conditions.
 
-**This plugin currently does not work!**
+:no_entry_sign: **This plugin currently does not work!**
 
 ## Requirements
 
@@ -43,7 +43,7 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 
 #### Branch: `master`
 
-* Initial commit
+* Initial development
 
 ## Screenshots
 
@@ -52,6 +52,5 @@ _Network Admin Settings Page (multisite only)_
 
 ![Plugin Settings Screen](https://raw.githubusercontent.com/dmhendricks/wordpress-conditional-editor-plugin/master/assets/screenshot-2.png "Plugin Settings Screen")
 _WP Admin Settings Page_
-
 
 [![Analytics](https://ga-beacon.appspot.com/UA-67333102-2/dmhendricks/wordpress-conditional-editor-plugin)](https://github.com/igrigorik/ga-beacon/?utm_source=github.com&utm_medium=referral&utm_content=button&utm_campaign=wordpress-conditional-editor-plugin)

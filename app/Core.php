@@ -3,13 +3,12 @@ namespace CloudVerve\ConditionalEditor;
 use CloudVerve\ConditionalEditor\Plugin;
 
 /**
- * Perform plugin logic
+ * Disable Gutenber based on configuration settings
  * @since 0.1.0
  */
 class Core extends Plugin {
 
   private $disable_gutenberg;
-  private $post_types;
 
   public function init() {
 
@@ -25,17 +24,29 @@ class Core extends Plugin {
       return;
     }
 
-    // Disable for Post Types
-    $this->post_types = $this->get_carbon_plugin_option( 'disabled_post_types' );
-    if( $this->post_types ) {
-      add_filter('gutenberg_can_edit_post_type', array( $this, 'post_types_classic_editor' ) );
-    }
+    // Disable by Post Type and Template Files
+    add_filter( 'gutenberg_can_edit_post_type', array( $this, 'disable_gutenberg' ), 10, 2 );
 
   }
 
-  public function post_types_classic_editor( $is_enabled, $post_type ) {
+  public function disable_gutenberg( $is_enabled, $post_type ) {
 
-    if( in_array( $post_type, $this->post_types ) ) return false;
+    // Disable by Post Type
+    $post_types = $this->get_carbon_plugin_option( 'disabled_post_types' );
+    if( $post_types && in_array( $post_type, $this->post_types ) ) return false;
+
+    // Disable Gutenberg editor by Template Files
+    if( is_admin() && !is_network_admin() && isset( $_GET['post'] ) && intval( $_GET['post'] ) ) {
+
+      $exclude_templates = $this->get_carbon_plugin_option( 'disabled_template_files' );
+
+      if( $exclude_templates ) {
+        $current_template = get_page_template_slug( $_GET['post'] );
+        if( $current_template && in_array( $current_template, $exclude_templates ) ) return false;
+      }
+
+    }
+
     return $is_enabled;
 
   }
