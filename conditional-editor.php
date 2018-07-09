@@ -4,7 +4,7 @@
  * Plugin Name:       Conditional Editor
  * Plugin URI:        https://github.com/cloudverve/wordpress-conditional-editor-plugin/
  * Description:       Choose between classic and Gutenberg editor based on conditions.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Author:            CloudVerve
  * Author URI:        https://www.cloudverve.com/
  * License:           GPL-2.0

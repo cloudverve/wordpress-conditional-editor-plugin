@@ -182,9 +182,10 @@ class Plugin {
   public function get_carbon_plugin_option( $key ) {
 
     $key = $this->prefix( $key );
+    $cache_key = $key . ( is_multisite() ? '_' . get_current_site()->id . '_' . get_current_blog_id() : '' );
 
     // Attempt to get value from cache, else fetch value from database
-    return $this->get_cache_object( $key, function() use ( &$key ) {
+    return $this->get_cache_object( $cache_key, function() use ( &$key ) {
       return carbon_get_theme_option( $key );
     });
 
@@ -199,13 +200,12 @@ class Plugin {
     */
   public function get_carbon_network_option( $key ) {
 
-    if( !defined( 'SITE_ID_CURRENT_SITE' ) ) return null;
-    $site_id = SITE_ID_CURRENT_SITE;
-
+    $site_id = get_current_site()->id;
     $key = $this->prefix( $key );
+    $cache_key = $key . '_' . $site_id;
 
     // Attempt to get value from cache, else fetch value from database
-    return $this->get_cache_object( $key, function() use ( &$site_id, &$key ) {
+    return $this->get_cache_object( $cache_key, function() use ( &$site_id, &$key ) {
       return carbon_get_network_option( $site_id, $key );
     }, true );
 

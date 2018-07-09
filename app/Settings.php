@@ -10,11 +10,16 @@ use Carbon_Fields\Field;
  */
 class Settings extends Plugin {
 
+  private $container;
+
   public function init() {
 
     if( is_multisite() ) $this->create_network_settings_page();
 
     $this->create_site_settings_page();
+
+    add_action( 'carbon_fields_network_container_saved', array( $this, 'options_saved_flush_cache_group' ) );
+    add_action( 'carbon_fields_theme_options_container_saved', array( $this, 'options_saved_flush_cache_group' ) );
 
   }
 
@@ -25,7 +30,7 @@ class Settings extends Plugin {
     */
   private function create_network_settings_page() {
 
-    $container = Container::make( 'network', $this->prefix( 'settings' ), __( 'Conditional Editor', $this->textdomain ) )
+    $this->container = Container::make( 'network', $this->prefix( 'settings' ), __( 'Conditional Editor', $this->textdomain ) )
       ->set_page_parent( 'settings.php' )
       ->add_fields([
         Field::make( 'text', $this->prefix( 'required_capability' ), __( 'Capability Required to Modify Sub-Site Settings', $this->textdomain ) )
@@ -35,7 +40,7 @@ class Settings extends Plugin {
           ->help_text( __( 'The setting below are <strong>defaults</strong> for sub-sites and may be overridden if the user has the capability defined above. Post Types and Template Files are not included here since they vary by theme.', $this->textdomain ) )
       ]);
 
-    $container->add_fields( $this->create_common_settings_fields( true ) );
+    $this->container->add_fields( $this->create_common_settings_fields( true ) );
 
   }
 
@@ -48,11 +53,11 @@ class Settings extends Plugin {
 
     $required_user_capability = is_multisite() ? (array) trim( $this->get_carbon_network_option( 'required_capability' ) ) : null;
 
-    $container = Container::make( 'theme_options', $this->prefix( 'site_settings' ), __( 'Conditional Editor', $this->textdomain ) )
-      ->where( 'current_user_capability', 'IN', $required_user_capability ?: 'manage_options' )
+    $this->container = Container::make( 'theme_options', $this->prefix( 'site_settings' ), __( 'Conditional Editor', $this->textdomain ) )
+      ->where( 'current_user_capability', 'IN', $required_user_capability ?: [ 'manage_options' ] )
       ->set_page_parent( 'options-general.php' );
 
-    $container->add_fields( $this->create_common_settings_fields( false ) );
+    $this->container->add_fields( $this->create_common_settings_fields( false ) );
 
   }
 
@@ -76,7 +81,7 @@ class Settings extends Plugin {
         ->set_default_value( $network ?: $this->get_carbon_network_option( 'disable_gutenberg_nag' ) ),
       Field::make( 'set', $this->prefix( 'disabled_roles' ), __( 'Limit User Roles to Classic Editor', $this->textdomain ) )
         ->set_datastore( new Serialized_Theme_Options_Datastore() )
-        ->set_default_value( $network ? null : $this->get_carbon_network_option( 'disabled_roles' ) )
+        ->set_default_value( $network ? [] : $this->get_carbon_network_option( 'disabled_roles' ) )
         ->add_options( $this->get_user_roles() )
     ];
 
@@ -138,6 +143,21 @@ class Settings extends Plugin {
     }
 
     return $roles;
+
+  }
+
+  /**
+    * Flush cached settings on save
+    *
+    * @since 0.2.0
+    */
+  public function options_saved_flush_cache_group() {
+
+    if( is_network_admin() ) wp_cache_delete( $this->prefix( 'required_capability', '_' ), $this->config->object_cache->group );
+
+    foreach( $this->container->get_fields() as $field ) {
+      wp_cache_delete( trim( $field->get_name(), '_' ), $this->config->object_cache->group );
+    }
 
   }
 
