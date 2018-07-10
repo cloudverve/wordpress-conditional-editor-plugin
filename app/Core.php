@@ -27,8 +27,19 @@ class Core extends Plugin {
     // Disable by Post Type and Template Files
     add_filter( 'gutenberg_can_edit_post_type', array( $this, 'disable_gutenberg' ), 10, 2 );
 
+    // Hide settings page menu item from WP Admin
+    if( $this->get_carbon_network_option( 'hide_plugin_settings_menu' ) )
+      add_action( 'admin_menu', array( $this, 'hide_admin_menu_page' ), 999 );
+
   }
 
+  /**
+   * Set editor based on configuration
+   *
+   * @param bool $is_enabled Whether or not Gutenberg editor is enabled
+   * @param string $post_type The post type of the current post
+   * @since 0.1.0
+   */
   public function disable_gutenberg( $is_enabled, $post_type ) {
 
     // Disable by Post Type
@@ -43,7 +54,7 @@ class Core extends Plugin {
     }
 
     // Disable Gutenberg editor by Template Files
-    if( is_admin() && !is_network_admin() && isset( $_GET['post'] ) && intval( $_GET['post'] ) ) {
+    if( isset( $_GET['post'] ) && intval( $_GET['post'] ) ) {
 
       $exclude_templates = $this->get_carbon_plugin_option( 'disabled_template_files' );
 
@@ -55,6 +66,16 @@ class Core extends Plugin {
     }
 
     return $is_enabled;
+
+  }
+
+  /**
+   * Hide settings page menu item from WP Admin
+   * @since 0.2.0
+   */
+  public function hide_admin_menu_page() {
+
+    remove_submenu_page( $this->get_carbon_network_option( 'menu_parent' ), 'crb_carbon_fields_container_ced_site_settings.php' );
 
   }
 

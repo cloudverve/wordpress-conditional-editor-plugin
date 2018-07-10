@@ -23,24 +23,25 @@ If you'd like to try it before release, you can download an installable ZIP here
 
 This plugin requires [Carbon Fields](https://carbonfields.net/) 2.2.0 or higher. The WordPress.org repo version will come with it bundled. If you prefer to use the plugin version of Carbon Fields ([download](https://carbonfields.net/zip/latest/)) or manage dependencies separately, an unbundled version will be made available at the [GitHub repository](https://github.com/cloudverve/wordpress-conditional-editor-plugin/).
 
-## Planned Features
+## Features
 
 * Multisite / Network Friendly
 	* Set default sub-site settings
 	* Specify parent menu for settings page
+  * Hide settings page from sub-sites
 * Disable Gutenberg completely
 * Disable by post type
 * Disable for specific [template files](https://developer.wordpress.org/themes/basics/template-files/)
 * Disable by user role
 * Hide Gutenberg admin notice/nag
 
-## TODO
+## Future Plans
 
 * Change: Minor improvements to admin style
 * Add: Ability to set editor by username
 * Add: Ability to set editor by post ID
-* Add: Ability to hide settings page menu item
-* **Extensive testing**
+* Add: Ability to set editor for Super Admins
+* Add: Ability for single/sub-sites to hide settings page from WP Admin
 
 ## Change Log
 

@@ -36,6 +36,8 @@ class Settings extends Plugin {
         Field::make( 'text', $this->prefix( 'required_capability' ), __( 'Capability Required to Modify Sub-Site Settings', $this->textdomain ) )
           ->help_text( sprintf( __( 'See <a href="%s" target="_blank">Roles &amp; Capabilities</a> for a list of valid capabilities. Set to <tt>manage_network</tt> to disable for site administrators. Default: <tt>manage_options</tt>.', $this->textdomain ), 'https://codex.wordpress.org/Roles_and_Capabilities#Roles' ) )
           ->set_default_value( 'manage_options' ),
+        Field::make( 'checkbox', $this->prefix( 'hide_plugin_settings_menu' ), __( 'Hide Plugin Settings Menu from Sub-Sites', $this->textdomain ) )
+          ->help_text( sprintf( __( 'The admin page may still be accessed from each sub-site at: %s', $this->textdomain ), '<tt>/wp-admin/options-general.php?page=crb_carbon_fields_container_ced_site_settings.php</tt>' ) ),
         Field::make( 'select', $this->prefix( 'menu_parent' ), __( 'Parent Menu for Settings Page', $this->textdomain ) )
           ->add_options([
             'themes.php' => 'Appearance',
@@ -43,7 +45,13 @@ class Settings extends Plugin {
             'options-general.php' => 'Settings',
             'tools.php' => 'Tools'
           ])
-          ->set_default_value( 'options-general.php' ),
+          ->set_default_value( 'options-general.php' )
+          ->set_conditional_logic([[
+            'field' => $this->prefix( 'hide_plugin_settings_menu' ),
+            'value' => false,
+            'compare' => '='
+          ]]
+        ),
         Field::make( 'separator', $this->prefix( 'network_settings_defaults' ), __( 'Global Defaults', $this->textdomain ) )
           ->help_text( __( 'The setting below are <strong>defaults</strong> for sub-sites and may be overridden if the user has the capability defined above. Post Types and Template Files are not included here since they vary by theme.', $this->textdomain ) )
       ]);
