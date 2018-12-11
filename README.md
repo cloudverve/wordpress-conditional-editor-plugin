@@ -9,7 +9,7 @@
 
 This plugin will allow you to choose between classic and Gutenberg editor based on conditions.
 
-:no_entry_sign: **This plugin is currently under development and likely contains bugs!**
+:no_entry_sign: **This plugin has been abandoned in favor of [Disable Gutenberg](https://wordpress.org/plugins/disable-gutenberg/), [Classic Editor](https://wordpress.org/plugins/classic-editor/) and [ClassicPress](https://www.classicpress.net/?utm_source=dailyword.press&utm_medium=referral&utm_content=link&utm_campaign=dailywordpress)**
 
 If you'd like to try it before release, you can download an installable ZIP here: [**conditional-editor.zip**](https://f001.backblazeb2.com/file/hendricks/projects/github/cloudverve/wordpress-conditional-editor-plugin/conditional-editor.zip)
 
